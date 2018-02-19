@@ -1,0 +1,23 @@
+stories:
+  app:
+    http:
+      port: 80
+
+env:
+  webhooks:
+    jws_token: TOKEN
+    jws_iss: netlify
+    jws_verify_iss: true
+    jws_algorithm: HS256
+    jws_header: X-Webhook-Signature
+
+  s3cmd:
+    bucket: BUCKET
+    access_key: KEY
+    secret_key: SECRET
+    s3cfg_file: null
+
+  github:
+    access_key: KEY
+
+  s3_bucket_dsn: https://BUCKET.s3.amazonaws.com
