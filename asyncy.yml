@@ -11,13 +11,11 @@ env:
     jws_algorithm: HS256
     jws_header: X-Webhook-Signature
 
-  s3cmd:
+  s3:
     bucket: BUCKET
     access_key: KEY
     secret_key: SECRET
-    s3cfg_file: null
 
   github:
-    access_key: KEY
-
-  s3_bucket_dsn: https://BUCKET.s3.amazonaws.com
+    access_token: TOKEN
+    user_agent: Asyncy

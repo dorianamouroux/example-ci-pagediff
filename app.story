@@ -1,49 +1,49 @@
-# netlify webhooks
 webhooks post as res
-    sha = ...
+    head_sha = res.body.commit_ref
+    slug = res.body.commit_url.split('/')[3:4].join('/')
+    status_endpoint = '{{slug}}/commits/{{head_sha}}/statuses'
 
-    # set pending status
-    github post '{{env.slug}}/commits/{{sha}}/statuses' {
+    github post status_endpoint {
       'state': 'pending',
-      'description': 'Analyzing web pages...'
+      'description': 'Analyzing pages...'
     }
 
-    # create new screenshots
-    # https://github.com/sindresorhus/pageres
-    new_shots = pageres res.data.url --save_to='/new'
-    # store images in s3
-    files = s3cmd put --recursive '/new/' '{{sha}}/images/'
+    # create screenshots of new pages
+    pageres res.body.deploy_ssl_url --save_to='/new'
+    new_images = s3 put --recursive '/new/', '{{slug}}/{{head_sha}}/images/'
 
-    # get commit to compare against
-    base = ...
+    # collect old images
+    base = github_find_compare_commit slug, head_sha
+    if base
+        old_images = s3 get --recursive '{{slug}}/{{base.sha}}/images/', '/old/'
 
-    # collect all the old images
-    s3cmd get --recursive '{{...}}/images/' '/old/'
+        # https://github.com/uber-archive/image-diff
+        image-diff '/old', '/new', '/diff'
+        diff_images = s3 put --recursive '/diff/', '{{slug}}/{{head_sha}}/diffs/'
 
-    # https://github.com/uber-archive/image-diff
-    diffs = image-diff '/old' '/new' '/diff'
-    # store image diffs in s3
-    files = s3cmd put --recursive '/diff/' '{{sha}}/diffs/'
+        # build and save html results
+        html = handlebars 'results.html'
+               --old_images=old_images
+               --new_images=new_images
+               --diff_images=diff_images
+        html_url = s3 put html '{{slug}}/{{head_sha}}/results.html'
 
-    # build and save html results
-    html = handlebars 'results.html'
-           --images=images
-           --diffs=diffs
-    s3cmd put html '{{sha}}/results.html'
+        new_n = ls '/new'
+        diff_n = ls '/diff'
 
-    new_n = ls '/new'
-    diff_n = ls '/diff'
-
-    if diff_n
-        state = 'failure'
-        description = '{{diff_n}} file changed of {{new_n}}'
+        if diff_n
+            state = 'failure'
+            description = '{{diff_n}} file changed of {{new_n}}'
+        else
+            state = 'success'
+            description = '{{new_n}} files remain the same'
     else
         state = 'success'
-        description = '{{new_n}} files remain the same'
+        description = 'Nothing to compare against.'
 
     # set github status
-    github post '{{env.slug}}/commits/{{sha}}/statuses' {
+    github post status_endpoint {
       'state': state,
       'description': description,
-      'target_url': '{{s3_bucket_dsn}}/{{sha}}/results.html'
+      'target_url': html_url
     }
