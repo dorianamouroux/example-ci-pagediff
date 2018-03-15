@@ -7,7 +7,7 @@ import Page from './Page'
 class ListPages extends PureComponent {
 
   state = {
-    currentPage: null,
+    currentPage: {diffSrc: "examples/diff.png", oldSrc: "examples/old.png", newSrc: "examples/new.png"},
   }
 
   focusPage = (currentPage) => {

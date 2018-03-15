@@ -1,5 +1,7 @@
 import React, { PureComponent } from 'react';
 
+import Slider from './Slider'
+
 
 class Page extends PureComponent {
 
@@ -9,7 +11,7 @@ class Page extends PureComponent {
     return (
       <div className="App">
         <button onClick={() => displayList()}>Go back</button>
-        {JSON.stringify(this.props)}
+        <Slider />
       </div>
     );
   }
