@@ -6,7 +6,7 @@ const Thumbnail = ({ diffSrc, oldSrc, newSrc, focusPage }) => {
     <div
       className="thumbnail"
       onClick={() => focusPage({diffSrc,oldSrc,newSrc})}>
-        <img src={diffSrc} alt="test" />
+        <img src={diffSrc} alt="thumbnail page change" />
         {diffSrc}
     </div>
   )
