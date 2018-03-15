@@ -4,9 +4,12 @@ import React, { PureComponent } from 'react';
 class Page extends PureComponent {
 
   render() {
+    const { displayList } = this.props
+
     return (
       <div className="App">
-        {JSON.stringify(window.DATA_CI)}
+        <button onClick={() => displayList()}>Go back</button>
+        {JSON.stringify(this.props)}
       </div>
     );
   }

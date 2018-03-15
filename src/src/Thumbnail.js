@@ -1,11 +1,13 @@
 import React from 'react';
 
 
-const Thumbnail = ({ page }) => {
+const Thumbnail = ({ diffSrc, oldSrc, newSrc, focusPage }) => {
   return (
-    <div>
-      <img />
-      {page}
+    <div
+      className="thumbnail"
+      onClick={() => focusPage({diffSrc,oldSrc,newSrc})}>
+        <img src={diffSrc} alt="test" />
+        {diffSrc}
     </div>
   )
 }
