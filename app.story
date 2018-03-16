@@ -10,23 +10,23 @@ webhooks post as res
 
     # create screenshots of new pages
     pageres res.body.deploy_ssl_url --save_to='/new'
-    new_images = s3 put --recursive '/new/', '{{slug}}/{{head_sha}}/images/'
+    new_images = s3 cp --recursive '/new/', '{{slug}}/{{head_sha}}/images/'
 
     # collect old images
     base = github_find_compare_commit slug, head_sha
     if base
-        old_images = s3 get --recursive '{{slug}}/{{base.sha}}/images/', '/old/'
+        old_images = s3 cp --recursive '{{slug}}/{{base.sha}}/images/', '/old/'
 
         # https://github.com/uber-archive/image-diff
         image-diff '/old', '/new', '/diff'
-        diff_images = s3 put --recursive '/diff/', '{{slug}}/{{head_sha}}/diffs/'
+        diff_images = s3 cp --recursive '/diff/', '{{slug}}/{{head_sha}}/diffs/'
 
         # build and save html results
         html = handlebars 'results.html'
                --old_images=old_images
                --new_images=new_images
                --diff_images=diff_images
-        html_url = s3 put html '{{slug}}/{{head_sha}}/results.html'
+        html_url = s3 cp html '{{slug}}/{{head_sha}}/results.html'
 
         new_n = ls '/new'
         diff_n = ls '/diff'
