@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 
+import './Page.css'
 import Slider from '../Slider'
 
 
@@ -24,13 +25,19 @@ class Page extends PureComponent {
     } = this.props
 
     return (
-      <div className="App">
-        <button onClick={displayList}>Go back</button>
+      <div className="Page">
+        <div className="button-wrapper">
+          <button onClick={displayList} className="button button-blue">Go back</button>
+          <button onClick={this.handleButtonDiff} className="button button-orange">
+            {this.state.showDiff
+              ? 'Show comparator'
+              : 'Highlight differences'
+            }</button>
+        </div>
         {this.state.showDiff
           ? <img src={diffSrc} alt="difference between the two pages" />
           : <Slider imgLeft={oldSrc} imgRight={newSrc} />
         }
-        <button onClick={this.handleButtonDiff}>Show diff</button>
       </div>
     );
   }

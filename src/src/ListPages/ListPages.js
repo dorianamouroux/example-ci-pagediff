@@ -1,5 +1,6 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 
+import './ListPages.css'
 import Thumbnail from '../Thumbnail'
 import Page from '../Page'
 
@@ -18,7 +19,7 @@ class ListPages extends PureComponent {
       old_images
     } = this.props
 
-    return [
+    const thumbnails = [
       <Thumbnail
         diffSrc={diff_images[0]}
         newSrc={new_images[0]}
@@ -26,9 +27,20 @@ class ListPages extends PureComponent {
         focusPage={this.focusPage}
         key={0} />,
     ]
-    // return diff_images.map((page) =>
-      // <Thumbnail diffSrc={page} newSrc={} key={page} />
+    // const thumbnails = diff_images.map((page) =>
+    //   <Thumbnail diffSrc={page} newSrc={} key={page} />
     // )
+    return (
+      <Fragment>
+        <h3>Page with changes</h3>
+        <div className="thumbnails-container">
+          {thumbnails}
+          {thumbnails}
+          {thumbnails}
+          {thumbnails}
+        </div>
+      </Fragment>
+    )
   }
 
   renderPage() {

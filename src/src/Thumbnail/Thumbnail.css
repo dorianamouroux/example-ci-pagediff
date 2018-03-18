@@ -1,5 +1,15 @@
 .thumbnail {
-  width: 33%;
+  width: 30%;
+  margin: 0 1% 10px;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.thumbnail:hover {
+  padding-left: .5%;
+  margin-left: .5%;
+  padding-top: 5px;
+  margin-bottom: 5px;
 }
 
 .thumbnail img {
