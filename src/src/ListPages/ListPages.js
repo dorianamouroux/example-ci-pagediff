@@ -1,22 +1,15 @@
 import React, { PureComponent } from 'react';
 
-import Thumbnail from './Thumbnail'
-import Page from './Page'
+import Thumbnail from '../Thumbnail'
+import Page from '../Page'
 
 
 class ListPages extends PureComponent {
 
-  state = {
-    currentPage: {diffSrc: "examples/diff.png", oldSrc: "examples/old.png", newSrc: "examples/new.png"},
-  }
-
-  focusPage = (currentPage) => {
-    this.setState({ currentPage })
-  }
-
-  displayList = () => {
-    this.setState({ currentPage: null })
-  }
+  // handle the current page displayed on screen; or the list if null
+  state = { currentPage: null }
+  focusPage = (currentPage) => { this.setState({ currentPage }) }
+  displayList = () => { this.setState({ currentPage: null }) }
 
   renderPages() {
     const {

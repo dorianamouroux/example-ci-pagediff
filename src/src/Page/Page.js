@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 
-import Slider from './Slider'
+import Slider from '../Slider'
 
 
 class Page extends PureComponent {

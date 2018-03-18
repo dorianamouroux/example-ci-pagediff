@@ -1,5 +1,7 @@
 import React from 'react';
 
+import './Thumbnail.css'
+
 
 const Thumbnail = ({ diffSrc, oldSrc, newSrc, focusPage }) => {
   return (
