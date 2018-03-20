@@ -1,6 +1,9 @@
 webhooks post as res
     head_sha = res.body.commit_ref
-    slug = res.body.commit_url.split('/')[3:4].join('/')
+    slug = python -c """
+        print("{{res.body.commit_url}}".split('/')[3:4].join('/'))
+    """
+
     status_endpoint = '{{slug}}/commits/{{head_sha}}/statuses'
 
     github post status_endpoint {
@@ -9,7 +12,8 @@ webhooks post as res
     }
 
     # create screenshots of new pages
-    pageres res.body.deploy_ssl_url --save_to='/new'
+    pages = ['/', '/events', '/jobs']
+    pageres res.body.deploy_ssl_url pages --save_to='/new'
     new_images = s3 cp --recursive '/new/', '{{slug}}/{{head_sha}}/images/'
 
     # collect old images
