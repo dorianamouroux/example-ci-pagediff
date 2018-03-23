@@ -1,39 +1,43 @@
-webhooks post as res
+webhooks as res
     head_sha = res.body.commit_ref
     slug = python -c """
         print("{{res.body.commit_url}}".split('/')[3:4].join('/'))
     """
-
     status_endpoint = '{{slug}}/commits/{{head_sha}}/statuses'
+    pages = ['/', '/events', '/jobs']
 
     github post status_endpoint {
       'state': 'pending',
       'description': 'Analyzing pages...'
     }
 
-    # create screenshots of new pages
-    pages = ['/', '/events', '/jobs']
-    pageres res.body.deploy_ssl_url pages --save_to='/new'
-    new_images = s3 cp --recursive '/new/', '{{slug}}/{{head_sha}}/images/'
+    # create screenshots
+    pageres res.body.deploy_ssl_url pages `/new`
+    # upload to S3
+    s3 cp `/new`, '/{{slug}}/{{head_sha}}/images/' --recursive
 
     # collect old images
     base = github_find_compare_commit slug, head_sha
     if base
-        old_images = s3 cp --recursive '{{slug}}/{{base.sha}}/images/', '/old/'
+        # download old version
+        s3 cp '/{{slug}}/{{base.sha}}/images/', `/old/` --recursive
 
-        # https://github.com/uber-archive/image-diff
-        image-diff '/old', '/new', '/diff'
-        diff_images = s3 cp --recursive '/diff/', '{{slug}}/{{head_sha}}/diffs/'
+        # diff each page
+        diffs = blink-diff many `/old`, `/new`, `/diff`
 
-        # build and save html results
-        html = handlebars 'results.html'
-               --old_images=old_images
-               --new_images=new_images
-               --diff_images=diff_images
-        html_url = s3 cp html '{{slug}}/{{head_sha}}/results.html'
+        # upload results to S3
+        s3 cp `/diff/`, '/{{slug}}/{{head_sha}}/diffs/' --recursive
 
-        new_n = ls '/new'
-        diff_n = ls '/diff'
+        # save results to s3
+        results = {
+            "before": base.sha,
+            "after": head_sha,
+            "results": diffs
+        }
+        html_url = s3 cp results '/{{slug}}/{{head_sha}}/results.json'
+
+        new_n = alpine ls `/new`
+        diff_n = alpine ls `/diff`
 
         if diff_n
             state = 'failure'
@@ -49,5 +53,5 @@ webhooks post as res
     github post status_endpoint {
       'state': state,
       'description': description,
-      'target_url': html_url
+      'target_url': '{{url}}/{{slug}}/{{head_sha}}'
     }

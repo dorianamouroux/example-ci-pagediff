@@ -4,13 +4,7 @@ stories:
       port: 80
 
 env:
-  webhooks:
-    jws_token:
-    jws_iss: netlify
-    jws_verify_iss: true
-    jws_algorithm: HS256
-    jws_header: X-Webhook-Signature
-
+  url: http://example-ci-pagediff.asyncyapp.com
   s3:
     bucket:
     access_key:

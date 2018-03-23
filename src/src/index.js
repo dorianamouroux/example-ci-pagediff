@@ -4,7 +4,10 @@ import App from './App';
 
 
 const cleanPath = window.location.pathname.replace(/^\/|\/$/g, '');
-const urlData = `${process.env.REACT_APP_S3_URL}/${cleanPath}.json`
+/*
+  /owner/repo/sha
+*/
+const urlData = `${process.env.REACT_APP_S3_URL}/${cleanPath}/results.json`
 
 
 fetch(urlData)
