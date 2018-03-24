@@ -1,8 +1,6 @@
 webhooks as res
     head_sha = res.body.commit_ref
-    slug = python -c """
-        print("{{res.body.commit_url}}".split('/')[3:4].join('/'))
-    """
+    slug = python -c "print('{{res.body.commit_url}}'.split('/')[3:4].join('/'))"
     status_endpoint = '{{slug}}/commits/{{head_sha}}/statuses'
     pages = ['/', '/events', '/jobs']
 
@@ -29,11 +27,7 @@ webhooks as res
         s3 cp `/diff/`, '/{{slug}}/{{head_sha}}/diffs/' --recursive
 
         # save results to s3
-        results = {
-            "before": base.sha,
-            "after": head_sha,
-            "results": diffs
-        }
+        results = {"before": base.sha, "after": head_sha, "results": diffs}
         html_url = s3 cp results '/{{slug}}/{{head_sha}}/results.json'
 
         new_n = alpine ls `/new`

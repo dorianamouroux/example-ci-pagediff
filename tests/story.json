@@ -1,0 +1,855 @@
+File: /Users/peak/Documents/asyncy/example-ci-pagediff/app.story
+{
+  "version": "0.0.9",
+  "script": {
+    "1": {
+      "method": "run",
+      "ln": "1",
+      "output": {
+        "$OBJECT": "path",
+        "paths": [
+          "res"
+        ]
+      },
+      "container": "webhooks",
+      "args": null,
+      "enter": null,
+      "exit": null
+    },
+    "2": {
+      "method": "set",
+      "ln": "2",
+      "output": null,
+      "container": null,
+      "args": [
+        {
+          "$OBJECT": "path",
+          "paths": [
+            "head_sha"
+          ]
+        },
+        {
+          "$OBJECT": "path",
+          "paths": [
+            "res",
+            "body",
+            "commit_ref"
+          ]
+        }
+      ],
+      "enter": null,
+      "exit": null,
+      "parent": "1"
+    },
+    "3": {
+      "method": "run",
+      "ln": "3",
+      "output": {
+        "$OBJECT": "path",
+        "paths": [
+          "slug"
+        ]
+      },
+      "container": "python",
+      "args": [
+        "-c",
+        {
+          "$OBJECT": "string",
+          "values": [
+            {
+              "$OBJECT": "path",
+              "paths": [
+                "res",
+                "body",
+                "commit_url"
+              ]
+            }
+          ],
+          "string": "print('{}'.split('/')[3:4].join('/'))"
+        }
+      ],
+      "enter": null,
+      "exit": null,
+      "parent": "1"
+    },
+    "4": {
+      "method": "set",
+      "ln": "4",
+      "output": null,
+      "container": null,
+      "args": [
+        {
+          "$OBJECT": "path",
+          "paths": [
+            "status_endpoint"
+          ]
+        },
+        {
+          "$OBJECT": "string",
+          "values": [
+            {
+              "$OBJECT": "path",
+              "paths": [
+                "slug"
+              ]
+            },
+            {
+              "$OBJECT": "path",
+              "paths": [
+                "head_sha"
+              ]
+            }
+          ],
+          "string": "{}/commits/{}/statuses"
+        }
+      ],
+      "enter": null,
+      "exit": null,
+      "parent": "1"
+    },
+    "5": {
+      "method": "set",
+      "ln": "5",
+      "output": null,
+      "container": null,
+      "args": [
+        {
+          "$OBJECT": "path",
+          "paths": [
+            "pages"
+          ]
+        },
+        {
+          "$OBJECT": "list",
+          "items": [
+            {
+              "$OBJECT": "string",
+              "string": "/"
+            },
+            {
+              "$OBJECT": "string",
+              "string": "/events"
+            },
+            {
+              "$OBJECT": "string",
+              "string": "/jobs"
+            }
+          ]
+        }
+      ],
+      "enter": null,
+      "exit": null,
+      "parent": "1"
+    },
+    "7": {
+      "method": "run",
+      "ln": "7",
+      "output": null,
+      "container": "github",
+      "args": [
+        {
+          "$OBJECT": "path",
+          "paths": [
+            "post"
+          ]
+        },
+        {
+          "$OBJECT": "path",
+          "paths": [
+            "status_endpoint"
+          ]
+        },
+        {
+          "$OBJECT": "dict",
+          "items": [
+            [
+              {
+                "$OBJECT": "string",
+                "string": "state"
+              },
+              {
+                "$OBJECT": "string",
+                "string": "pending"
+              }
+            ],
+            [
+              {
+                "$OBJECT": "string",
+                "string": "description"
+              },
+              {
+                "$OBJECT": "string",
+                "string": "Analyzing pages..."
+              }
+            ]
+          ]
+        }
+      ],
+      "enter": null,
+      "exit": null,
+      "parent": "1"
+    },
+    "10": {
+      "method": "run",
+      "ln": "10",
+      "output": null,
+      "container": "pageres",
+      "args": [
+        {
+          "$OBJECT": "path",
+          "paths": [
+            "res",
+            "body",
+            "deploy_ssl_url"
+          ]
+        },
+        {
+          "$OBJECT": "path",
+          "paths": [
+            "pages"
+          ]
+        },
+        {
+          "$OBJECT": "string",
+          "type": "file",
+          "string": "/new"
+        }
+      ],
+      "enter": null,
+      "exit": null,
+      "parent": "1"
+    },
+    "12": {
+      "method": "run",
+      "ln": "12",
+      "output": null,
+      "container": "s3",
+      "args": [
+        {
+          "$OBJECT": "path",
+          "paths": [
+            "cp"
+          ]
+        },
+        {
+          "$OBJECT": "string",
+          "type": "file",
+          "string": "/new"
+        },
+        {
+          "$OBJECT": "string",
+          "values": [
+            {
+              "$OBJECT": "path",
+              "paths": [
+                "slug"
+              ]
+            },
+            {
+              "$OBJECT": "path",
+              "paths": [
+                "head_sha"
+              ]
+            }
+          ],
+          "string": "/{}/{}/images/"
+        },
+        "--recursive"
+      ],
+      "enter": null,
+      "exit": null,
+      "parent": "1"
+    },
+    "14": {
+      "method": "run",
+      "ln": "14",
+      "output": {
+        "$OBJECT": "path",
+        "paths": [
+          "base"
+        ]
+      },
+      "container": "github_find_compare_commit",
+      "args": [
+        {
+          "$OBJECT": "path",
+          "paths": [
+            "slug"
+          ]
+        },
+        {
+          "$OBJECT": "path",
+          "paths": [
+            "head_sha"
+          ]
+        }
+      ],
+      "enter": null,
+      "exit": null,
+      "parent": "1"
+    },
+    "15": {
+      "method": "if",
+      "ln": "15",
+      "output": null,
+      "container": null,
+      "args": [
+        {
+          "$OBJECT": "path",
+          "paths": [
+            "base"
+          ]
+        }
+      ],
+      "enter": "17",
+      "exit": "37",
+      "parent": "1"
+    },
+    "17": {
+      "method": "run",
+      "ln": "17",
+      "output": null,
+      "container": "s3",
+      "args": [
+        {
+          "$OBJECT": "path",
+          "paths": [
+            "cp"
+          ]
+        },
+        {
+          "$OBJECT": "string",
+          "values": [
+            {
+              "$OBJECT": "path",
+              "paths": [
+                "slug"
+              ]
+            },
+            {
+              "$OBJECT": "path",
+              "paths": [
+                "base",
+                "sha"
+              ]
+            }
+          ],
+          "string": "/{}/{}/images/"
+        },
+        {
+          "$OBJECT": "string",
+          "type": "file",
+          "string": "/old/"
+        },
+        "--recursive"
+      ],
+      "enter": null,
+      "exit": null,
+      "parent": "15"
+    },
+    "19": {
+      "method": "run",
+      "ln": "19",
+      "output": {
+        "$OBJECT": "path",
+        "paths": [
+          "diffs"
+        ]
+      },
+      "container": "blink-diff",
+      "args": [
+        {
+          "$OBJECT": "path",
+          "paths": [
+            "many"
+          ]
+        },
+        {
+          "$OBJECT": "string",
+          "type": "file",
+          "string": "/old"
+        },
+        {
+          "$OBJECT": "string",
+          "type": "file",
+          "string": "/new"
+        },
+        {
+          "$OBJECT": "string",
+          "type": "file",
+          "string": "/diff"
+        }
+      ],
+      "enter": null,
+      "exit": null,
+      "parent": "15"
+    },
+    "22": {
+      "method": "run",
+      "ln": "22",
+      "output": null,
+      "container": "s3",
+      "args": [
+        {
+          "$OBJECT": "path",
+          "paths": [
+            "cp"
+          ]
+        },
+        {
+          "$OBJECT": "string",
+          "type": "file",
+          "string": "/diff/"
+        },
+        {
+          "$OBJECT": "string",
+          "values": [
+            {
+              "$OBJECT": "path",
+              "paths": [
+                "slug"
+              ]
+            },
+            {
+              "$OBJECT": "path",
+              "paths": [
+                "head_sha"
+              ]
+            }
+          ],
+          "string": "/{}/{}/diffs/"
+        },
+        "--recursive"
+      ],
+      "enter": null,
+      "exit": null,
+      "parent": "15"
+    },
+    "24": {
+      "method": "set",
+      "ln": "24",
+      "output": null,
+      "container": null,
+      "args": [
+        {
+          "$OBJECT": "path",
+          "paths": [
+            "results"
+          ]
+        },
+        {
+          "$OBJECT": "dict",
+          "items": [
+            [
+              {
+                "$OBJECT": "string",
+                "string": "before"
+              },
+              {
+                "$OBJECT": "path",
+                "paths": [
+                  "base",
+                  "sha"
+                ]
+              }
+            ],
+            [
+              {
+                "$OBJECT": "string",
+                "string": "after"
+              },
+              {
+                "$OBJECT": "path",
+                "paths": [
+                  "head_sha"
+                ]
+              }
+            ],
+            [
+              {
+                "$OBJECT": "string",
+                "string": "results"
+              },
+              {
+                "$OBJECT": "path",
+                "paths": [
+                  "diffs"
+                ]
+              }
+            ]
+          ]
+        }
+      ],
+      "enter": null,
+      "exit": null,
+      "parent": "15"
+    },
+    "25": {
+      "method": "run",
+      "ln": "25",
+      "output": {
+        "$OBJECT": "path",
+        "paths": [
+          "html_url"
+        ]
+      },
+      "container": "s3",
+      "args": [
+        {
+          "$OBJECT": "path",
+          "paths": [
+            "cp"
+          ]
+        },
+        {
+          "$OBJECT": "path",
+          "paths": [
+            "results"
+          ]
+        },
+        {
+          "$OBJECT": "string",
+          "values": [
+            {
+              "$OBJECT": "path",
+              "paths": [
+                "slug"
+              ]
+            },
+            {
+              "$OBJECT": "path",
+              "paths": [
+                "head_sha"
+              ]
+            }
+          ],
+          "string": "/{}/{}/results.json"
+        }
+      ],
+      "enter": null,
+      "exit": null,
+      "parent": "15"
+    },
+    "27": {
+      "method": "run",
+      "ln": "27",
+      "output": {
+        "$OBJECT": "path",
+        "paths": [
+          "new_n"
+        ]
+      },
+      "container": "alpine",
+      "args": [
+        {
+          "$OBJECT": "path",
+          "paths": [
+            "ls"
+          ]
+        },
+        {
+          "$OBJECT": "string",
+          "type": "file",
+          "string": "/new"
+        }
+      ],
+      "enter": null,
+      "exit": null,
+      "parent": "15"
+    },
+    "28": {
+      "method": "run",
+      "ln": "28",
+      "output": {
+        "$OBJECT": "path",
+        "paths": [
+          "diff_n"
+        ]
+      },
+      "container": "alpine",
+      "args": [
+        {
+          "$OBJECT": "path",
+          "paths": [
+            "ls"
+          ]
+        },
+        {
+          "$OBJECT": "string",
+          "type": "file",
+          "string": "/diff"
+        }
+      ],
+      "enter": null,
+      "exit": null,
+      "parent": "15"
+    },
+    "30": {
+      "method": "if",
+      "ln": "30",
+      "output": null,
+      "container": null,
+      "args": [
+        {
+          "$OBJECT": "path",
+          "paths": [
+            "diff_n"
+          ]
+        }
+      ],
+      "enter": "31",
+      "exit": "34",
+      "parent": "15"
+    },
+    "31": {
+      "method": "set",
+      "ln": "31",
+      "output": null,
+      "container": null,
+      "args": [
+        {
+          "$OBJECT": "path",
+          "paths": [
+            "state"
+          ]
+        },
+        {
+          "$OBJECT": "string",
+          "string": "failure"
+        }
+      ],
+      "enter": null,
+      "exit": null,
+      "parent": "30"
+    },
+    "32": {
+      "method": "set",
+      "ln": "32",
+      "output": null,
+      "container": null,
+      "args": [
+        {
+          "$OBJECT": "path",
+          "paths": [
+            "description"
+          ]
+        },
+        {
+          "$OBJECT": "string",
+          "values": [
+            {
+              "$OBJECT": "path",
+              "paths": [
+                "diff_n"
+              ]
+            },
+            {
+              "$OBJECT": "path",
+              "paths": [
+                "new_n"
+              ]
+            }
+          ],
+          "string": "{} file changed of {}"
+        }
+      ],
+      "enter": null,
+      "exit": null,
+      "parent": "30"
+    },
+    "33": {
+      "method": "else",
+      "ln": "33",
+      "output": null,
+      "container": null,
+      "args": null,
+      "enter": null,
+      "exit": null,
+      "parent": "15"
+    },
+    "34": {
+      "method": "set",
+      "ln": "34",
+      "output": null,
+      "container": null,
+      "args": [
+        {
+          "$OBJECT": "path",
+          "paths": [
+            "state"
+          ]
+        },
+        {
+          "$OBJECT": "string",
+          "string": "success"
+        }
+      ],
+      "enter": null,
+      "exit": null,
+      "parent": "33"
+    },
+    "35": {
+      "method": "set",
+      "ln": "35",
+      "output": null,
+      "container": null,
+      "args": [
+        {
+          "$OBJECT": "path",
+          "paths": [
+            "description"
+          ]
+        },
+        {
+          "$OBJECT": "string",
+          "values": [
+            {
+              "$OBJECT": "path",
+              "paths": [
+                "new_n"
+              ]
+            }
+          ],
+          "string": "{} files remain the same"
+        }
+      ],
+      "enter": null,
+      "exit": null,
+      "parent": "33"
+    },
+    "36": {
+      "method": "else",
+      "ln": "36",
+      "output": null,
+      "container": null,
+      "args": null,
+      "enter": null,
+      "exit": null,
+      "parent": "1"
+    },
+    "37": {
+      "method": "set",
+      "ln": "37",
+      "output": null,
+      "container": null,
+      "args": [
+        {
+          "$OBJECT": "path",
+          "paths": [
+            "state"
+          ]
+        },
+        {
+          "$OBJECT": "string",
+          "string": "success"
+        }
+      ],
+      "enter": null,
+      "exit": null,
+      "parent": "36"
+    },
+    "38": {
+      "method": "set",
+      "ln": "38",
+      "output": null,
+      "container": null,
+      "args": [
+        {
+          "$OBJECT": "path",
+          "paths": [
+            "description"
+          ]
+        },
+        {
+          "$OBJECT": "string",
+          "string": "Nothing to compare against."
+        }
+      ],
+      "enter": null,
+      "exit": null,
+      "parent": "36"
+    },
+    "41": {
+      "method": "run",
+      "ln": "41",
+      "output": null,
+      "container": "github",
+      "args": [
+        {
+          "$OBJECT": "path",
+          "paths": [
+            "post"
+          ]
+        },
+        {
+          "$OBJECT": "path",
+          "paths": [
+            "status_endpoint"
+          ]
+        },
+        {
+          "$OBJECT": "dict",
+          "items": [
+            [
+              {
+                "$OBJECT": "string",
+                "string": "state"
+              },
+              {
+                "$OBJECT": "path",
+                "paths": [
+                  "state"
+                ]
+              }
+            ],
+            [
+              {
+                "$OBJECT": "string",
+                "string": "description"
+              },
+              {
+                "$OBJECT": "path",
+                "paths": [
+                  "description"
+                ]
+              }
+            ],
+            [
+              {
+                "$OBJECT": "string",
+                "string": "target_url"
+              },
+              {
+                "$OBJECT": "string",
+                "values": [
+                  {
+                    "$OBJECT": "path",
+                    "paths": [
+                      "url"
+                    ]
+                  },
+                  {
+                    "$OBJECT": "path",
+                    "paths": [
+                      "slug"
+                    ]
+                  },
+                  {
+                    "$OBJECT": "path",
+                    "paths": [
+                      "head_sha"
+                    ]
+                  }
+                ],
+                "string": "{}/{}/{}"
+              }
+            ]
+          ]
+        }
+      ],
+      "enter": null,
+      "exit": null,
+      "parent": "1"
+    }
+  }
+}
