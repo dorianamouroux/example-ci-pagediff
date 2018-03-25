@@ -1,4 +1,10 @@
 [build]
   base    = "src"
   publish = "dist"
-  command = "npm install && npm run-script build && echo '/* /index.html 200' > ../dist/_redirects"
+  command = "npm install && npm run-script build"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = true
