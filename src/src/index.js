@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import App from './App';
 
 
-const cleanPath = window.location.pathname.replace(/^\/|\/$/g, '');
-const urlData = `${process.env.REACT_APP_S3_URL}/${cleanPath}.json`
+window.BASE_URL = window.location.pathname.replace(/^\/|\/$/g, '')
+const urlData = `${process.env.REACT_APP_S3_URL}/${window.BASE_URL}.json`
 
 
 fetch(urlData)

@@ -14,27 +14,8 @@
 }
 
 .thumbnail img {
-  max-width: 100%;
-}
-
-
-{
-  "deleted": {
-    "page_name": "img url",
-    ...
-  }
-
-  "modified": {
-    "page_name": [
-      "img url old",
-      "img url diff",
-      "img url new",
-    ],
-    ...
-  }
-
-  "created": {
-    "page_name": "img url",
-    ...
-  }
+  width: 100%;
+  min-height: 100px;
+  background-color: white;
+  display: block;
 }

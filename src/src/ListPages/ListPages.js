@@ -10,45 +10,51 @@ class ListPages extends PureComponent {
   getNewPages() {
     const { created, focusPage } = this.props
 
-    return Object
-      .entries(created)
-      .map(([name, image]) => (
+    return created.map(filename => {
+      const srcImage = `${process.env.REACT_APP_S3_URL}/${window.BASE_URL}/new/${filename}`
+      return (
         <Thumbnail
-          title={name}
-          newSrc={image}
+          title={filename.split('.')[0]}
+          newSrc={srcImage}
           focusPage={focusPage}
-          key={name} />
-      ))
+          key={filename} />
+      )
+    })
   }
 
   getChangedPages() {
-    const { modified, focusPage } = this.props
+    const { diffs, focusPage } = this.props
 
-    return Object
-      .entries(modified)
-      .map(([name, images]) => (
+    return diffs.map(diff => {
+      const srcNewImage = `${process.env.REACT_APP_S3_URL}/${window.BASE_URL}/new/${diff.path}`
+      const srcDiffImage = `${process.env.REACT_APP_S3_URL}/${window.BASE_URL}/diff/${diff.path}`
+      const srcOldImage = `${process.env.REACT_APP_S3_URL}/${window.BASE_URL}/old/${diff.path}`
+
+      return (
         <Thumbnail
-          title={name}
-          newSrc={images[0]}
-          diffSrc={images[1]}
-          oldSrc={images[2]}
+          title={diff.path.split('.')[0]}
+          newSrc={srcNewImage}
+          diffSrc={srcDiffImage}
+          oldSrc={srcOldImage}
           focusPage={focusPage}
-          key={name} />
-      ))
+          key={diff.path} />
+      )
+    })
   }
 
   getDeletedPages() {
     const { deleted, focusPage } = this.props
 
-    return Object
-      .entries(deleted)
-      .map(([name, image]) => (
+    return deleted.map(filename => {
+      const srcImage = `${process.env.REACT_APP_S3_URL}/${window.BASE_URL}/old/${filename}`
+      return (
         <Thumbnail
-          title={name}
-          oldSrc={image}
+          title={filename.split('.')[0]}
+          oldSrc={srcImage}
           focusPage={focusPage}
-          key={name} />
-      ))
+          key={filename} />
+      )
+    })
   }
 
   render() {
