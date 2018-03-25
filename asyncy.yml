@@ -1,5 +1,5 @@
 env:
-  url: http://example-ci-pagediff.asyncyapp.com
+  url: https://example-ci-pagediff.asyncyapp.com
 
   github:
-    user_agent: Asyncy
+    user_agent: asyncy/example
