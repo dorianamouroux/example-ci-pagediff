@@ -4,7 +4,6 @@
   command = "npm install && npm run-script build"
 
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-  force = true
+  from    = "/*"
+  to      = "/index.html"
+  status  = 200
