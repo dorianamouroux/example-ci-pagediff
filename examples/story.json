@@ -1,3 +1,4 @@
+File: /Users/peak/Documents/asyncy/example-ci-pagediff/app.story
 {
   "version": "0.0.9",
   "script": {
@@ -71,9 +72,85 @@
       "exit": null,
       "parent": "1"
     },
+    "4": {
+      "method": "set",
+      "ln": "4",
+      "output": null,
+      "container": null,
+      "args": [
+        {
+          "$OBJECT": "path",
+          "paths": [
+            "bucket"
+          ]
+        },
+        {
+          "$OBJECT": "string",
+          "values": [
+            {
+              "$OBJECT": "path",
+              "paths": [
+                "aws_bucket"
+              ]
+            },
+            {
+              "$OBJECT": "path",
+              "paths": [
+                "slug"
+              ]
+            },
+            {
+              "$OBJECT": "path",
+              "paths": [
+                "commit"
+              ]
+            }
+          ],
+          "string": "s3://{}/{}/{}"
+        }
+      ],
+      "enter": null,
+      "exit": null,
+      "parent": "1"
+    },
     "5": {
       "method": "set",
       "ln": "5",
+      "output": null,
+      "container": null,
+      "args": [
+        {
+          "$OBJECT": "path",
+          "paths": [
+            "status_endpoint"
+          ]
+        },
+        {
+          "$OBJECT": "string",
+          "values": [
+            {
+              "$OBJECT": "path",
+              "paths": [
+                "slug"
+              ]
+            },
+            {
+              "$OBJECT": "path",
+              "paths": [
+                "commit"
+              ]
+            }
+          ],
+          "string": "/repos/{}/commits/{}/statuses"
+        }
+      ],
+      "enter": null,
+      "exit": null,
+      "parent": "1"
+    },
+    "7": {
+      "method": "set",
+      "ln": "7",
       "output": null,
       "container": null,
       "args": [
@@ -105,9 +182,9 @@
       "exit": null,
       "parent": "1"
     },
-    "7": {
+    "9": {
       "method": "run",
-      "ln": "7",
+      "ln": "9",
       "output": null,
       "container": "github",
       "args": [
@@ -118,22 +195,10 @@
           ]
         },
         {
-          "$OBJECT": "string",
-          "values": [
-            {
-              "$OBJECT": "path",
-              "paths": [
-                "slug"
-              ]
-            },
-            {
-              "$OBJECT": "path",
-              "paths": [
-                "commit"
-              ]
-            }
-          ],
-          "string": "{}/commits/{}/statuses"
+          "$OBJECT": "path",
+          "paths": [
+            "status_endpoint"
+          ]
         },
         {
           "$OBJECT": "dict",
@@ -155,7 +220,7 @@
               },
               {
                 "$OBJECT": "string",
-                "string": "visual-testing"
+                "string": "ci/visual"
               }
             ],
             [
@@ -175,9 +240,9 @@
       "exit": null,
       "parent": "1"
     },
-    "10": {
+    "12": {
       "method": "run",
-      "ln": "10",
+      "ln": "12",
       "output": null,
       "container": "pageres",
       "args": [
@@ -205,9 +270,9 @@
       "exit": null,
       "parent": "1"
     },
-    "11": {
+    "13": {
       "method": "run",
-      "ln": "11",
+      "ln": "13",
       "output": null,
       "container": "s3",
       "args": [
@@ -228,17 +293,11 @@
             {
               "$OBJECT": "path",
               "paths": [
-                "slug"
-              ]
-            },
-            {
-              "$OBJECT": "path",
-              "paths": [
-                "commit"
+                "bucket"
               ]
             }
           ],
-          "string": "/{}/{}/new/"
+          "string": "{}/new/"
         },
         "--recursive"
       ],
@@ -246,9 +305,9 @@
       "exit": null,
       "parent": "1"
     },
-    "13": {
+    "15": {
       "method": "run",
-      "ln": "13",
+      "ln": "15",
       "output": null,
       "container": "pageres",
       "args": [
@@ -276,9 +335,9 @@
       "exit": null,
       "parent": "1"
     },
-    "14": {
+    "16": {
       "method": "run",
-      "ln": "14",
+      "ln": "16",
       "output": null,
       "container": "s3",
       "args": [
@@ -299,17 +358,11 @@
             {
               "$OBJECT": "path",
               "paths": [
-                "slug"
-              ]
-            },
-            {
-              "$OBJECT": "path",
-              "paths": [
-                "commit"
+                "bucket"
               ]
             }
           ],
-          "string": "/{}/{}/old/"
+          "string": "{}/old/"
         },
         "--recursive"
       ],
@@ -317,9 +370,9 @@
       "exit": null,
       "parent": "1"
     },
-    "16": {
+    "18": {
       "method": "run",
-      "ln": "16",
+      "ln": "18",
       "output": {
         "$OBJECT": "path",
         "paths": [
@@ -354,9 +407,9 @@
       "exit": null,
       "parent": "1"
     },
-    "17": {
+    "19": {
       "method": "run",
-      "ln": "17",
+      "ln": "19",
       "output": null,
       "container": "s3",
       "args": [
@@ -377,17 +430,11 @@
             {
               "$OBJECT": "path",
               "paths": [
-                "slug"
-              ]
-            },
-            {
-              "$OBJECT": "path",
-              "paths": [
-                "commit"
+                "bucket"
               ]
             }
           ],
-          "string": "/{}/{}/diffs/"
+          "string": "{}/diffs/"
         },
         "--recursive",
         {
@@ -414,26 +461,20 @@
             {
               "$OBJECT": "path",
               "paths": [
-                "slug"
-              ]
-            },
-            {
-              "$OBJECT": "path",
-              "paths": [
-                "commit"
+                "bucket"
               ]
             }
           ],
-          "string": "/{}/{}/results.json"
+          "string": "{}/results.json"
         }
       ],
       "enter": null,
       "exit": null,
       "parent": "1"
     },
-    "19": {
+    "21": {
       "method": "if",
-      "ln": "19",
+      "ln": "21",
       "output": null,
       "container": null,
       "args": [
@@ -451,13 +492,13 @@
           ]
         }
       ],
-      "enter": "20",
-      "exit": "23",
+      "enter": "22",
+      "exit": "25",
       "parent": "1"
     },
-    "20": {
+    "22": {
       "method": "set",
-      "ln": "20",
+      "ln": "22",
       "output": null,
       "container": null,
       "args": [
@@ -474,11 +515,11 @@
       ],
       "enter": null,
       "exit": null,
-      "parent": "19"
+      "parent": "21"
     },
-    "21": {
+    "23": {
       "method": "set",
-      "ln": "21",
+      "ln": "23",
       "output": null,
       "container": null,
       "args": [
@@ -504,11 +545,11 @@
       ],
       "enter": null,
       "exit": null,
-      "parent": "19"
+      "parent": "21"
     },
-    "22": {
+    "24": {
       "method": "else",
-      "ln": "22",
+      "ln": "24",
       "output": null,
       "container": null,
       "args": null,
@@ -516,9 +557,9 @@
       "exit": null,
       "parent": "1"
     },
-    "23": {
+    "25": {
       "method": "set",
-      "ln": "23",
+      "ln": "25",
       "output": null,
       "container": null,
       "args": [
@@ -535,11 +576,11 @@
       ],
       "enter": null,
       "exit": null,
-      "parent": "22"
+      "parent": "24"
     },
-    "24": {
+    "26": {
       "method": "set",
-      "ln": "24",
+      "ln": "26",
       "output": null,
       "container": null,
       "args": [
@@ -565,11 +606,11 @@
       ],
       "enter": null,
       "exit": null,
-      "parent": "22"
+      "parent": "24"
     },
-    "26": {
+    "28": {
       "method": "run",
-      "ln": "26",
+      "ln": "28",
       "output": null,
       "container": "github",
       "args": [
@@ -580,22 +621,10 @@
           ]
         },
         {
-          "$OBJECT": "string",
-          "values": [
-            {
-              "$OBJECT": "path",
-              "paths": [
-                "slug"
-              ]
-            },
-            {
-              "$OBJECT": "path",
-              "paths": [
-                "commit"
-              ]
-            }
-          ],
-          "string": "{}/commits/{}/statuses"
+          "$OBJECT": "path",
+          "paths": [
+            "status_endpoint"
+          ]
         },
         {
           "$OBJECT": "dict",
@@ -619,7 +648,7 @@
               },
               {
                 "$OBJECT": "string",
-                "string": "visual-testing"
+                "string": "ci/visual"
               }
             ],
             [
@@ -645,7 +674,7 @@
                   {
                     "$OBJECT": "path",
                     "paths": [
-                      "url"
+                      "app_url"
                     ]
                   },
                   {

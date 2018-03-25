@@ -1,5 +1,6 @@
 env:
   url: https://example-ci-pagediff.asyncyapp.com
+  aws_bucket: asyncy-example-ci-pagediff
 
   github:
     user_agent: asyncy/example

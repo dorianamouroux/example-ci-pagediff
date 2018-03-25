@@ -1,27 +1,29 @@
 webhooks as res
     commit = res.body.commit_ref
     slug = python -c "print('{{res.body.commit_url}}'.split('/')[3:4].join('/'))"
+    bucket = 's3://{{aws_bucket}}/{{slug}}/{{commit}}'
+    status_endpoint = '/repos/{{slug}}/commits/{{commit}}/statuses'
 
     pages = ['/', '/events', '/jobs']
 
-    github post '{{slug}}/commits/{{commit}}/statuses' {
+    github post status_endpoint {
       'state': 'pending',
-      'context': 'visual-testing',
+      'context': 'ci/visual',
       'description': 'Analyzing pages...'
     }
 
     # screenshot staging site
     pageres res.body.deploy_ssl_url pages `/new`
-    s3 cp `/new/`, '/{{slug}}/{{commit}}/new/' --recursive
+    s3 cp `/new/`, '{{bucket}}/new/' --recursive
 
     # screenshot production site
     pageres res.body.url pages `/old`
-    s3 cp `/old/`, '/{{slug}}/{{commit}}/old/' --recursive
+    s3 cp `/old/`, '{{bucket}}/old/' --recursive
 
-    # diff all thepages
+    # diff the screenshots
     diffs = blink-diff many `/old`, `/new`, `/diff`
-    s3 cp `/diff/`, '/{{slug}}/{{commit}}/diffs/' --recursive
-    s3 cp diffs '/{{slug}}/{{commit}}/results.json'
+    s3 cp `/diff/`, '{{bucket}}/diffs/' --recursive
+    s3 cp diffs '{{bucket}}/results.json'
 
     if diffs.failed > 0
         state = 'failure'
@@ -30,9 +32,9 @@ webhooks as res
         state = 'success'
         description = '{{diffs.passed}} are all same. :tada:'
 
-    github post '{{slug}}/commits/{{commit}}/statuses' {
+    github post status_endpoint {
       'state': state,
-      'context': 'visual-testing',
+      'context': 'ci/visual',
       'description': description,
-      'target_url': '{{url}}/{{slug}}/{{commit}}'
+      'target_url': '{{app_url}}/{{slug}}/{{commit}}'
     }
