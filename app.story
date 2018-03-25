@@ -14,8 +14,7 @@ webhooks as res
     # upload to S3
     s3 cp `/new`, '/{{slug}}/{{head_sha}}/images/' --recursive
 
-    # collect old images
-    base = github_find_compare_commit slug, head_sha
+    base = next 'find_base_commit.story'
     if base
         # download old version
         s3 cp '/{{slug}}/{{base.sha}}/images/', `/old/` --recursive

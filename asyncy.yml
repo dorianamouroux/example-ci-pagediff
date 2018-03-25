@@ -1,15 +1,5 @@
-stories:
-  app:
-    http:
-      port: 80
-
 env:
   url: http://example-ci-pagediff.asyncyapp.com
-  s3:
-    bucket:
-    access_key:
-    secret_key:
 
   github:
-    access_token:
     user_agent: Asyncy
