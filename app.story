@@ -1,49 +1,40 @@
-webhooks post as res
-    head_sha = res.body.commit_ref
-    slug = res.body.commit_url.split('/')[3:4].join('/')
-    status_endpoint = '{{slug}}/commits/{{head_sha}}/statuses'
+webhooks as res
+    commit = res.body.commit_ref
+    slug = python -c "print('{{res.body.commit_url}}'.split('/')[3:4].join('/'))"
+    bucket = 's3://{{aws_bucket}}/{{slug}}/{{commit}}'
+    status_endpoint = '/repos/{{slug}}/commits/{{commit}}/statuses'
+
+    pages = ['/', '/events', '/jobs']
 
     github post status_endpoint {
       'state': 'pending',
+      'context': 'ci/visual',
       'description': 'Analyzing pages...'
     }
 
-    # create screenshots of new pages
-    pageres res.body.deploy_ssl_url --save_to='/new'
-    new_images = s3 put --recursive '/new/', '{{slug}}/{{head_sha}}/images/'
+    # screenshot staging site
+    pageres res.body.deploy_ssl_url pages `/new`
+    s3 cp `/new/`, '{{bucket}}/new/' --recursive
 
-    # collect old images
-    base = github_find_compare_commit slug, head_sha
-    if base
-        old_images = s3 get --recursive '{{slug}}/{{base.sha}}/images/', '/old/'
+    # screenshot production site
+    pageres res.body.url pages `/old`
+    s3 cp `/old/`, '{{bucket}}/old/' --recursive
 
-        # https://github.com/uber-archive/image-diff
-        image-diff '/old', '/new', '/diff'
-        diff_images = s3 put --recursive '/diff/', '{{slug}}/{{head_sha}}/diffs/'
+    # diff the screenshots
+    diffs = blink-diff many `/old`, `/new`, `/diff`
+    s3 cp `/diff/`, '{{bucket}}/diffs/' --recursive
+    s3 cp diffs '{{bucket}}/results.json'
 
-        # build and save html results
-        html = handlebars 'results.html'
-               --old_images=old_images
-               --new_images=new_images
-               --diff_images=diff_images
-        html_url = s3 put html '{{slug}}/{{head_sha}}/results.html'
-
-        new_n = ls '/new'
-        diff_n = ls '/diff'
-
-        if diff_n
-            state = 'failure'
-            description = '{{diff_n}} file changed of {{new_n}}'
-        else
-            state = 'success'
-            description = '{{new_n}} files remain the same'
+    if diffs.failed > 0
+        state = 'failure'
+        description = '{{diffs.failed}} pages changed.'
     else
         state = 'success'
-        description = 'Nothing to compare against.'
+        description = '{{diffs.passed}} are all same. :tada:'
 
-    # set github status
     github post status_endpoint {
       'state': state,
+      'context': 'ci/visual',
       'description': description,
-      'target_url': html_url
+      'target_url': '{{app_url}}/{{slug}}/{{commit}}'
     }

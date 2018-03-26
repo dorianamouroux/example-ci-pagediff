@@ -1,21 +1,6 @@
-stories:
-  app:
-    http:
-      port: 80
-
 env:
-  webhooks:
-    jws_token: TOKEN
-    jws_iss: netlify
-    jws_verify_iss: true
-    jws_algorithm: HS256
-    jws_header: X-Webhook-Signature
-
-  s3:
-    bucket: BUCKET
-    access_key: KEY
-    secret_key: SECRET
+  url: https://example-ci-pagediff.asyncyapp.com
+  aws_bucket: asyncy-example-ci-pagediff
 
   github:
-    access_token: TOKEN
-    user_agent: Asyncy
+    user_agent: asyncy/example
